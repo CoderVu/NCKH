@@ -26,5 +26,3 @@
 
 2. Làm theo hướng dẫn trên màn hình để nhập dữ liệu và xem kết quả tối ưu hóa.
 
-## Liên Hệ
-Nếu có bất kỳ câu hỏi hoặc góp ý nào, vui lòng liên hệ qua email: yourname@example.com
