@@ -11,26 +11,29 @@ class TimeCostOptimizationApp:
         style = ttk.Style()
         master.title("CHƯƠNG TRÌNH TỐI ƯU HÓA SƠ ĐỒ MẠNG THEO CHỈ TIÊU THỜI GIAN - CHI PHÍ")
         master.state('zoomed')
-        style.configure("Treeview", rowheight=30, borderwidth=1)
-        style.configure("Treeview", rowheight=30, borderwidth=1, relief="solid")
-        style.configure("Treeview", fieldbackground="white", background="white")
-        style.layout("Treeview", [('Treeview.treearea', {'sticky': 'nswe'})])
-        style.map("Treeview", background=[("selected", "#347083")])
         
+      
+        self.master.configure(bg="#f0f8ff")
+
+     
+        style.configure("Treeview", rowheight=30, borderwidth=1, relief="solid", background="#f4f4f4")
+        style.configure("Treeview.Heading", font=("Arial", 10, "bold"), background="#4CAF50", foreground="black")  # Đặt màu nền header xanh và màu chữ đen
+        style.map("Treeview", background=[("selected", "#347083"), ("active", "#e6f2ff")])
+
         self.create_widgets()
         self.initialize_tasks()
         self.selected_item = None
     
     def create_widgets(self):
-        # Định nghĩa phông chữ in đậm
+      
         bold_font = ("Arial", 10, "bold")
 
         # Tiêu đề chính
         title_label = tk.Label(
             self.master, text="CHƯƠNG TRÌNH TỐI ƯU HÓA SƠ ĐỒ MẠNG", 
-            font=("Arial", 14, "bold"), fg="blue", bg="#f4f4f4"
+            font=("Arial", 18, "bold"), fg="blue", bg="#f4f4f4"
         )
-        title_label.grid(row=0, column=0, columnspan=6, pady=10)
+        title_label.grid(row=0, column=0, columnspan=6, pady=20)
         
         # Định nghĩa các cột
         columns = ("Tên công việc", "T.gian b.thường", "T.gian khẩn", "Cp.bình thường", "Cp.khẩn trương", "Trước")
@@ -38,7 +41,7 @@ class TimeCostOptimizationApp:
         self.tree = ttk.Treeview(self.master, columns=columns, show="headings")
         
         for col in columns:
-            self.tree.heading(col, text=col)
+            self.tree.heading(col, text=col, anchor='w')
             self.tree.column(col, width=120)
         
         self.tree.grid(row=1, column=0, columnspan=6, padx=10, pady=10, sticky='nsew')
@@ -51,34 +54,54 @@ class TimeCostOptimizationApp:
         # Khung chứa các ô nhập liệu
         entry_frame = tk.Frame(self.master, bg="#f4f4f4")
         entry_frame.grid(row=2, column=0, columnspan=6, pady=10)
-
+  
         self.entries = {}
         for i, col in enumerate(columns):
-            label = tk.Label(entry_frame, text=col, bg="#f4f4f4")
-            label.grid(row=0, column=i, padx=5)
-            entry = tk.Entry(entry_frame)
-            entry.grid(row=1, column=i, padx=5)
+            label = tk.Label(entry_frame, text=col, bg="#f4f4f4", font=bold_font)
+            label.grid(row=0, column=i, padx=5, pady=5)
+            entry = tk.Entry(entry_frame, font=("Arial", 10), bd=2, relief="solid")  # Thêm viền cho Entry
+            entry.grid(row=1, column=i, padx=5, pady=5)
             self.entries[col] = entry
 
         # Khung chứa các nút bấm
         btn_frame = tk.Frame(self.master, bg="#f4f4f4")
         btn_frame.grid(row=3, column=0, columnspan=6, pady=10)
 
-        tk.Button(btn_frame, text="Thêm hàng", command=self.add_row, bg="gray", fg="white", font=("Arial", 10, "bold")).grid(row=0, column=0, padx=5)
-        tk.Button(btn_frame, text="Xóa hàng", command=self.delete_row, bg="gray", fg="white", font=("Arial", 10, "bold")).grid(row=0, column=1, padx=5)
-        tk.Button(btn_frame, text="Lưu", command=self.save_data, bg="gray", fg="white", font=("Arial", 10, "bold")).grid(row=0, column=2, padx=5)
-        tk.Button(btn_frame, text="Trở lại", command=self.reset_data, bg="gray", fg="white", font=("Arial", 10, "bold")).grid(row=0, column=3, padx=5)
-        tk.Button(btn_frame, text="Chỉnh sửa", command=self.edit_row, bg="gray", fg="white", font=("Arial", 10, "bold")).grid(row=0, column=4, padx=5)
-        tk.Button(btn_frame, text="Tệp", command=self.import_csv, bg="gray", fg="white", font=("Arial", 10, "bold")).grid(row=0, column=5, padx=5)
-        tk.Button(btn_frame, text="Xóa toàn bộ", command=self.clear_data, bg="gray", fg="white", font=("Arial", 10, "bold")).grid(row=0, column=6, padx=5)
+        button_style = {"bg": "#4CAF50", "fg": "white", "font": ("Arial", 10, "bold"), "padx": 10, "pady": 5}
+
+      
+        def on_enter(e):
+            e.widget['background'] = '#45a049'
+
+        def on_leave(e):
+            e.widget['background'] = '#4CAF50'
+
+      
+        buttons = [
+            ("Thêm hàng", self.add_row),
+            ("Xóa hàng", self.delete_row),
+            ("Lưu", self.save_data),
+            ("Trở lại", self.reset_data),
+            ("Chỉnh sửa", self.edit_row),
+            ("Tệp", self.import_csv),
+            ("Xóa toàn bộ", self.clear_data),
+            ("Tối ưu", self.optimize)
+        ]
+
+        for idx, (text, command) in enumerate(buttons):
+            btn = tk.Button(btn_frame, text=text, command=command, **button_style)
+            btn.grid(row=0, column=idx, padx=5)
+            btn.bind("<Enter>", on_enter)
+            btn.bind("<Leave>", on_leave)
 
         # Thêm ô nhập liệu cho deadline
-        deadline_label = tk.Label(btn_frame, text="Deadline", bg="#f4f4f4")
+        deadline_label = tk.Label(btn_frame, text="Deadline", bg="#f4f4f4", font=bold_font)
         deadline_label.grid(row=0, column=7, padx=5)
-        self.deadline_entry = tk.Entry(btn_frame)
+        self.deadline_entry = tk.Entry(btn_frame, font=("Arial", 10), bd=2, relief="solid")
         self.deadline_entry.grid(row=0, column=8, padx=5)
 
-        tk.Button(btn_frame, text="Tối ưu", command=self.optimize, bg="gray", fg="white", font=("Arial", 10, "bold")).grid(row=0, column=9, padx=5)
+
+        tk.Button(btn_frame, text="Tối ưu", command=self.optimize, **button_style).grid(row=0, column=9, padx=5)
         
     def initialize_tasks(self):
         # Danh sách công việc có sẵn
