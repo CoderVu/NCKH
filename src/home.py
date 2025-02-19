@@ -95,13 +95,13 @@ class TimeCostOptimizationApp:
             btn.bind("<Leave>", on_leave)
 
         # Thêm ô nhập liệu cho deadline
-        deadline_label = tk.Label(btn_frame, text="Deadline", bg="#f4f4f4", font=bold_font)
-        deadline_label.grid(row=0, column=7, padx=5)
+        deadline_label = tk.Label(btn_frame, text="Thời hạn hoàn thành (ngày):", bg="#f4f4f4", font=bold_font)
+        deadline_label.grid(row=0, column=8, padx=5)
         self.deadline_entry = tk.Entry(btn_frame, font=("Arial", 10), bd=2, relief="solid")
-        self.deadline_entry.grid(row=0, column=8, padx=5)
+        self.deadline_entry.grid(row=0, column=9, padx=5)
 
 
-        tk.Button(btn_frame, text="Tối ưu", command=self.optimize, **button_style).grid(row=0, column=9, padx=5)
+        tk.Button(btn_frame, text="Tối ưu", command=self.optimize, **button_style).grid(row=0, column=10, padx=5, pady=5)
         
     def initialize_tasks(self):
         # Danh sách công việc có sẵn

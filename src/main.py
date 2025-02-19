@@ -5,6 +5,7 @@ class IntroductionWindow:
     def __init__(self, master):
         self.master = master
         master.title("Giới thiệu")
+     
         master.geometry("700x500")
         master.config(bg="#f0f8ff")  
 
@@ -18,7 +19,7 @@ class IntroductionWindow:
         label_title.pack(pady=20)
 
         # Thông tin sinh viên
-        label_student = tk.Label(main_frame, text="Sinh viên: Nguyễn Văn A", 
+        label_student = tk.Label(main_frame, text="Sinh viên: Nguyễn Thị Thanh Huyền\nMSSV: 19110197", 
                                  font=("Arial", 16), fg="#2f4f4f", bg="white")
         label_student.pack(pady=5)
 
