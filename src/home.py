@@ -6,36 +6,55 @@ from result import open_result_window
 from time_cost_optimization import optimize_cost_and_time, critical_path_method
 
 class TimeCostOptimizationApp:
-    def __init__(self, master):
+    
+    def __init__(self, master, name, time_unit):
         self.master = master
+        self.name = name
+   
+        self.time_unit = time_unit
+        
         style = ttk.Style()
         master.title("CHƯƠNG TRÌNH TỐI ƯU HÓA SƠ ĐỒ MẠNG THEO CHỈ TIÊU THỜI GIAN - CHI PHÍ")
         master.state('zoomed')
-        
-      
         self.master.configure(bg="#f0f8ff")
 
-     
         style.configure("Treeview", rowheight=30, borderwidth=1, relief="solid", background="#f4f4f4")
-        style.configure("Treeview.Heading", font=("Arial", 10, "bold"), background="#4CAF50", foreground="black")  # Đặt màu nền header xanh và màu chữ đen
+        style.configure("Treeview.Heading", font=("Arial", 10, "bold"), background="#4CAF50", foreground="black")
         style.map("Treeview", background=[("selected", "#347083"), ("active", "#e6f2ff")])
+
+               
+        self.project_info_frame = tk.Frame(master, bg="#E3F2FD", bd=2, relief="ridge")
+        self.project_info_frame.grid(row=1, column=0, columnspan=6, pady=10, padx=10, sticky="n")
+
+        self.title_label = tk.Label(
+            self.project_info_frame,
+            text=f"Tên: {self.name}\nĐơn vị thời gian: {self.time_unit}",
+            font=("Helvetica", 12, "bold"),
+            fg="black",
+            bg="#E3F2FD",
+            padx=20,
+            pady=10
+        )
+        self.title_label.pack(padx=10, pady=10)
+
 
         self.create_widgets()
         self.initialize_tasks()
         self.selected_item = None
-    
+
+        
     def create_widgets(self):
       
         bold_font = ("Arial", 10, "bold")
 
-        # Tiêu đề chính
+    
         title_label = tk.Label(
             self.master, text="CHƯƠNG TRÌNH TỐI ƯU HÓA SƠ ĐỒ MẠNG", 
             font=("Arial", 18, "bold"), fg="blue", bg="#f4f4f4"
         )
         title_label.grid(row=0, column=0, columnspan=6, pady=20)
         
-        # Định nghĩa các cột
+      
         columns = ("Tên công việc", "T.gian b.thường", "T.gian khẩn", "Cp.bình thường", "Cp.khẩn trương", "Trước")
         
         self.tree = ttk.Treeview(self.master, columns=columns, show="headings")
@@ -44,16 +63,16 @@ class TimeCostOptimizationApp:
             self.tree.heading(col, text=col, anchor='w')
             self.tree.column(col, width=120)
         
-        self.tree.grid(row=1, column=0, columnspan=6, padx=10, pady=10, sticky='nsew')
+        self.tree.grid(row=2, column=0, columnspan=6, padx=10, pady=10, sticky='nsew')
 
-        # Thêm thanh cuộn dọc
+     
         scrollbar = ttk.Scrollbar(self.master, orient="vertical", command=self.tree.yview)
-        scrollbar.grid(row=1, column=6, sticky='ns')
+        scrollbar.grid(row=2, column=6, sticky='ns')
         self.tree.configure(yscrollcommand=scrollbar.set)
 
-        # Khung chứa các ô nhập liệu
+     
         entry_frame = tk.Frame(self.master, bg="#f4f4f4")
-        entry_frame.grid(row=2, column=0, columnspan=6, pady=10)
+        entry_frame.grid(row=3, column=0, columnspan=6, pady=10)
   
         self.entries = {}
         for i, col in enumerate(columns):
@@ -63,9 +82,9 @@ class TimeCostOptimizationApp:
             entry.grid(row=1, column=i, padx=5, pady=5)
             self.entries[col] = entry
 
-        # Khung chứa các nút bấm
+      
         btn_frame = tk.Frame(self.master, bg="#f4f4f4")
-        btn_frame.grid(row=3, column=0, columnspan=6, pady=10)
+        btn_frame.grid(row=4, column=0, columnspan=6, pady=10)
 
         button_style = {"bg": "#4CAF50", "fg": "white", "font": ("Arial", 10, "bold"), "padx": 10, "pady": 5}
 
@@ -94,7 +113,7 @@ class TimeCostOptimizationApp:
             btn.bind("<Enter>", on_enter)
             btn.bind("<Leave>", on_leave)
 
-        # Thêm ô nhập liệu cho deadline
+       
         deadline_label = tk.Label(btn_frame, text="Thời hạn hoàn thành (ngày):", bg="#f4f4f4", font=bold_font)
         deadline_label.grid(row=0, column=8, padx=5)
         self.deadline_entry = tk.Entry(btn_frame, font=("Arial", 10), bd=2, relief="solid")
@@ -103,8 +122,12 @@ class TimeCostOptimizationApp:
 
         tk.Button(btn_frame, text="Tối ưu", command=self.optimize, **button_style).grid(row=0, column=10, padx=5, pady=5)
         
+      
+        self.title_label.grid(row=1, column=0, columnspan=6, pady=10, sticky="w")
+
+        
     def initialize_tasks(self):
-        # Danh sách công việc có sẵn
+    
         predefined_tasks = [
             {"task": "1-2", "duration": 5, "duration_min": 3, "cost": 2, "cost_min": 2.5, "predecessors": []},
             {"task": "1-3", "duration": 4, "duration_min": 4, "cost": 3, "cost_min": 3, "predecessors": []},
@@ -121,7 +144,6 @@ class TimeCostOptimizationApp:
         ]
         self.tasks = predefined_tasks
 
-        # Thêm dữ liệu vào bảng
         for task in predefined_tasks:
             self.tree.insert("", "end", values=(task["task"], task["duration"], task["duration_min"], task["cost"], task["cost_min"], ", ".join(task["predecessors"])))
 
@@ -234,16 +256,16 @@ class TimeCostOptimizationApp:
     def optimize(self):
         try:
             deadline = int(self.deadline_entry.get().strip())
-            # Lấy dữ liệu từ Treeview
+           
             self.tasks = self.get_tasks_from_treeview()
-            # Store original durations and costs
+           
             original_tasks = [{**task} for task in self.tasks]
             
-            # Calculate initial total duration and cost
+          
             dates_df, critical_path, initial_finish_time = critical_path_method(self.tasks)
             initial_total_cost = sum(task["cost"] for task in self.tasks)
 
-            # Perform optimization
+          
             total_cost, total_time, task_updates = optimize_cost_and_time(self.tasks, deadline)
 
             results = []
@@ -281,8 +303,8 @@ class TimeCostOptimizationApp:
             open_result_window(results, summary, self.tasks, dates_df)
         except Exception as e:
             messagebox.showerror("Error", str(e))
-# Chạy chương trình
+
 if __name__ == "__main__":
     root = tk.Tk()
-    app = TimeCostOptimizationApp(root)
+    app = TimeCostOptimizationApp(root, "", "")
     root.mainloop()
