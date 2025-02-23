@@ -61,7 +61,7 @@ class IntroductionWindow:
 
         self.label_student = tk.Label(
             main_frame,
-            text="GV hướng dẫn: ThS. Phạm Thị Trang\nSinh viên: Nguyễn Thị Thanh Huyền\nMSSV: 19110197",
+            text="GV hướng dẫn: ThS. Phạm Thị Trang",
             font=("Helvetica", 14),
             fg="#1E3D59",
             bg="white"

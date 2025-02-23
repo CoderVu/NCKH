@@ -32,6 +32,15 @@ class MainAppWindow:
             logo_label.pack(pady=10)
         except Exception as e:
             print("Lỗi khi tải ảnh:", e)
+        author_info = tk.Label(
+            main_frame,
+            text="Khoa Quản Lý Dự Án - Ngành Kinh Tế Xây Dựng",
+            font=("Helvetica", 14),
+            fg="#1E3D59",
+            bg="white"
+        )
+        author_info.pack(pady=5)
+
 
         project_title = tk.Label(
             main_frame,
@@ -44,15 +53,7 @@ class MainAppWindow:
         )
         project_title.pack(pady=10)
 
-        author_info = tk.Label(
-            main_frame,
-            text="Sinh viên: Nguyễn Thị Thanh Huyền\nMSSV: 19110197\nKhoa Quản Lý Dự Án - Ngành Kinh Tế Xây Dựng",
-            font=("Helvetica", 14),
-            fg="#1E3D59",
-            bg="white"
-        )
-        author_info.pack(pady=5)
-
+       
         button_frame = tk.Frame(main_frame, bg="white")
         button_frame.pack(pady=20)
 
