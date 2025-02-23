@@ -1,1 +1,4 @@
-lambda e: start_button.config(bg="#4CAF50"))
+from home import TimeCostOptimizationApp
+
+
+TimeCostOptimizationApp().run()

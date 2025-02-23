@@ -25,7 +25,7 @@ class MainAppWindow:
         main_frame.place(relx=0.5, rely=0.5, anchor="center", width=700, height=450)
 
         try:
-            logo_image = tk.PhotoImage(file="e:/Python/nghiencuu/GIT/NCKH/src/image/logo.png")
+            logo_image = tk.PhotoImage(file="src/image/logo.png")
             logo_image = logo_image.subsample(10, 10) 
             logo_label = tk.Label(main_frame, image=logo_image, bg="white")
             logo_label.image = logo_image 

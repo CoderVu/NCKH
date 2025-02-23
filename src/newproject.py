@@ -30,7 +30,7 @@ class ProjectOptimizationApp:
         logo_frame.pack(side="left", padx=15, pady=15)
 
         try:
-            logo = Image.open("e:/Python/nghiencuu/GIT/NCKH/src/image/logo.png")
+            logo = Image.open("src/image/logo.png")
             logo = logo.resize((100, 100), Image.LANCZOS)
             logo_image = ImageTk.PhotoImage(logo)
 
