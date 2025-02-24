@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from time_cost_optimization import gantt_chart, plot_diagonal_chart
+from time_cost_optimization import gantt_chart, plot_diagonal_chart,critical_path_method
 import pandas as pd
 from tkinter import filedialog
 
@@ -80,26 +80,38 @@ class ResultWindow:
         save_button.bind("<Leave>", on_leave)
 
         # Nút hiển thị sơ đồ Gantt
-        gantt_button = tk.Button(button_frame, text="Hiển thị biểu đồ Gantt", command=self.show_gantt_chart, **button_style)
+        gantt_button = tk.Button(button_frame, text="Biểu đồ Gantt", command=self.show_gantt_chart, **button_style)
         gantt_button.grid(row=0, column=2, padx=5)
         gantt_button.bind("<Enter>", on_enter)
         gantt_button.bind("<Leave>", on_leave)
 
         # Nút hiển thị biểu đồ đường chéo
-        diagonal_button = tk.Button(button_frame, text="Hiển thị biểu đồ đường chéo", command=self.show_diagonal_chart, **button_style)
+        diagonal_button = tk.Button(button_frame, text="Biểu đồ đường chéo", command=self.show_diagonal_chart, **button_style)
         diagonal_button.grid(row=0, column=3, padx=5)
         diagonal_button.bind("<Enter>", on_enter)
         diagonal_button.bind("<Leave>", on_leave)
 
+          # Nút hiển thị sơ đồ Gantt sau khi tối ưu
+        optimized_gantt_button = tk.Button(button_frame, text="Biểu đồ Gantt tối ưu", command=self.show_optimized_gantt_chart, **button_style)
+        optimized_gantt_button.grid(row=0, column=4, padx=5)
+        optimized_gantt_button.bind("<Enter>", on_enter)
+        optimized_gantt_button.bind("<Leave>", on_leave)
+
+         # Nút hiển thị biểu đồ đường chéo sau khi tối ưu
+        optimized_diagonal_button = tk.Button(button_frame, text="Biểu đồ đường chéo tối ưu", command=self.show_optimized_diagonal_chart, **button_style)
+        optimized_diagonal_button.grid(row=0, column=5, padx=5)
+        optimized_diagonal_button.bind("<Enter>", on_enter)
+        optimized_diagonal_button.bind("<Leave>", on_leave)
+
         # Nút hiển thị thông tin chi tiết
         details_button = tk.Button(button_frame, text="Hiển thị chi tiết", command=self.show_details, **button_style)
-        details_button.grid(row=0, column=4, padx=5)
+        details_button.grid(row=0, column=6, padx=5)
         details_button.bind("<Enter>", on_enter)
         details_button.bind("<Leave>", on_leave)
 
         # Nút trở về kết quả trước
         back_button = tk.Button(button_frame, text="Quay lại", command=self.show_initial_results, **button_style)
-        back_button.grid(row=0, column=5, padx=5)
+        back_button.grid(row=0, column=7, padx=5)
         back_button.bind("<Enter>", on_enter)
         back_button.bind("<Leave>", on_leave)
 
@@ -143,6 +155,18 @@ class ResultWindow:
     def show_diagonal_chart(self):
         fig = plot_diagonal_chart(self.tasks, self.dates, size_x=10, size_y=6, return_fig=True)  # Kích thước lớn hơn
         self.display_chart(fig)
+    
+    def show_optimized_gantt_chart(self):
+        optimized_dates_df, optimized_critical_path, optimized_finish_time = critical_path_method(self.tasks)
+        optimized_fig = gantt_chart(self.tasks, optimized_dates_df, size_x=10, size_y=6, return_fig=True)
+        self.display_chart(optimized_fig)
+
+
+    def show_optimized_diagonal_chart(self):
+        optimized_dates_df, optimized_critical_path, optimized_finish_time = critical_path_method(self.tasks)
+        optimized_fig = plot_diagonal_chart(self.tasks, optimized_dates_df, size_x=10, size_y=6, return_fig=True)
+        self.display_chart(optimized_fig)
+
 
     def show_details(self):
         for item in self.tree.get_children():

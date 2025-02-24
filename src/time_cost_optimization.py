@@ -187,7 +187,6 @@ def plot_diagonal_chart(tasks, dates_df, size_x=15, size_y=10, return_fig=False)
 
     ax.set_yticks(range(len(tasks)))
     ax.set_yticklabels([task["task"] for task in tasks])
-    ax.set_xlabel('Số tuần')
     ax.set_title('Sơ đồ Xiên (Tiến trình công việc)')
     ax.grid(True)
 
